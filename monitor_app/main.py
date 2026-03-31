@@ -3,12 +3,15 @@ from tkinter import ttk
 import sys
 import os
 
+os.environ.pop("TCL_LIBRARY", None)
+os.environ.pop("TK_LIBRARY", None)
+
 # Add project root to path to ensure imports work correctly
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # --- OPTIONAL FIX FOR CUSTOM TKINTER INSTALLATIONS ---
 try:
-    # We look for Tcl/Tk relative to the executable OR in common Laragon paths
+    # We look for Tcl/Tk relative to the executable
     base_python = os.path.dirname(sys.executable)
     
     # 1. Try to find TCL
@@ -16,7 +19,6 @@ try:
     possible_tcl = [
         os.path.join(base_python, "tcl", "tcl8.6"),
         os.path.join(base_python, "Lib", "tcl8.6"),
-        "C:\\laragon\\bin\\python\\python-3.13\\tcl\\tcl8.6" # Hardcoded fallback for user
     ]
     for p in possible_tcl:
         if os.path.exists(os.path.join(p, "init.tcl")):
@@ -28,7 +30,6 @@ try:
     possible_tk = [
         os.path.join(base_python, "tcl", "tk8.6"),
         os.path.join(base_python, "Lib", "tk8.6"),
-        "C:\\laragon\\bin\\python\\python-3.13\\tcl\\tk8.6" # Hardcoded fallback for user
     ]
     for p in possible_tk:
         if os.path.exists(os.path.join(p, "tk.tcl")):
@@ -37,10 +38,10 @@ try:
 
     if tcl_path:
         os.environ["TCL_LIBRARY"] = tcl_path
-        print(f"Applied TCL_LIBRARY: {tcl_path}")
+        # print(f"Applied TCL_LIBRARY: {tcl_path}")
     if tk_path:
         os.environ["TK_LIBRARY"] = tk_path
-        print(f"Applied TK_LIBRARY: {tk_path}")
+        # print(f"Applied TK_LIBRARY: {tk_path}")
 
 except Exception as e:
     print(f"Warning: Could not auto-fix Tkinter paths: {e}")
